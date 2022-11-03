@@ -4,7 +4,7 @@
   "description": "Transform input into equally-sized blocks of output",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tape test/*.js"
   },
   "repository": {
     "type": "git",
@@ -23,5 +23,8 @@
   "bugs": {
     "url": "https://github.com/ThaUnknown/block-iterator/issues"
   },
-  "homepage": "https://github.com/ThaUnknown/block-iterator#readme"
+  "homepage": "https://github.com/ThaUnknown/block-iterator#readme",
+  "devDependencies": {
+    "tape": "^5.6.1"
+  }
 }

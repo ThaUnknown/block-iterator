@@ -11,12 +11,20 @@ function concat (chunks, size) {
   return b
 }
 
-module.exports = async function * (iterator, size = 512) { // <3 Endless
+module.exports = async function * (iterator, size = 512, opts = {}) { // <3 Endless
+  if (typeof size === 'object') {
+    opts = size
+    size = opts.size
+  }
+  let { nopad, zeroPadding = true } = opts
+
+  if (nopad) zeroPadding = false
+
   let buffered = []
   let bufferedBytes = 0
 
   for await (const value of iterator) {
-    bufferedBytes += value.byteLength
+    bufferedBytes += value.byteLength || value.length
     buffered.push(value)
 
     while (bufferedBytes >= size) {
@@ -26,5 +34,8 @@ module.exports = async function * (iterator, size = 512) { // <3 Endless
       buffered = [b.slice(size, b.length)]
     }
   }
-  yield concat(buffered, bufferedBytes)
+  if (bufferedBytes) {
+    if (zeroPadding) buffered.push(new Uint8Array(size - bufferedBytes))
+    yield concat(buffered)
+  }
 }
