@@ -1,9 +1,14 @@
 function concat (chunks, size) {
-  if (!size) size = chunks.reduce((acc, curr) => acc + curr.length, 0)
-
+  if (typeof chunks[0] === 'string') return chunks.join('')
+  if (!size) {
+    size = 0
+    let i = chunks.length || chunks.byteLength || 0
+    while (i--) size += chunks[i].length
+  }
   const b = new Uint8Array(size)
   let offset = 0
-  for (const chunk of chunks) {
+  for (let i = 0, l = chunks.length; i < l; i++) {
+    const chunk = chunks[i]
     b.set(chunk, offset)
     offset += chunk.byteLength || chunk.length
   }
