@@ -1,8 +1,9 @@
 function concat (chunks, size) {
   if (typeof chunks[0] === 'string') return chunks.join('')
+  if (typeof chunks[0] === 'number') return new Uint8Array(chunks)
   if (!size) {
     size = 0
-    let i = chunks.length || chunks.byteLength || 0
+    let i = chunks.byteLength || chunks.length || 0
     while (i--) size += chunks[i].length
   }
   const b = new Uint8Array(size)
@@ -29,7 +30,7 @@ module.exports = async function * (iterator, size = 512, opts = {}) { // <3 Endl
   let bufferedBytes = 0
 
   for await (const value of iterator) {
-    bufferedBytes += value.byteLength || value.length
+    bufferedBytes += value.byteLength || value.length || 1
     buffered.push(value)
 
     while (bufferedBytes >= size) {
