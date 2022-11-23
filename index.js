@@ -1,11 +1,6 @@
 function concat (chunks, size) {
   if (typeof chunks[0] === 'string') return chunks.join('')
   if (typeof chunks[0] === 'number') return new Uint8Array(chunks)
-  if (!size) {
-    size = 0
-    let i = chunks.byteLength || chunks.length || 0
-    while (i--) size += chunks[i].length
-  }
   const b = new Uint8Array(size)
   let offset = 0
   for (let i = 0, l = chunks.length; i < l; i++) {
@@ -17,7 +12,7 @@ function concat (chunks, size) {
   return b
 }
 
-module.exports = async function * (iterator, size = 512, opts = {}) { // <3 Endless
+module.exports = async function * (iterator, size = 512, opts = {}) {
   if (typeof size === 'object') {
     opts = size
     size = opts.size
@@ -33,15 +28,25 @@ module.exports = async function * (iterator, size = 512, opts = {}) { // <3 Endl
     bufferedBytes += value.byteLength || value.length || 1
     buffered.push(value)
 
-    while (bufferedBytes >= size) {
-      const b = concat(buffered)
-      bufferedBytes -= size
-      yield b.slice(0, size)
-      buffered = [b.slice(size, b.length)]
+    if (bufferedBytes >= size) {
+      const b = concat(buffered, bufferedBytes)
+      let offset = 0
+
+      while (bufferedBytes >= size) {
+        yield b.slice(offset, offset + size)
+        bufferedBytes -= size
+        offset += size
+      }
+
+      buffered = [b.slice(offset, b.length)]
     }
   }
   if (bufferedBytes) {
-    if (zeroPadding) buffered.push(new Uint8Array(size - bufferedBytes))
-    yield concat(buffered)
+    if (zeroPadding) {
+      buffered.push(new Uint8Array(size - bufferedBytes))
+      yield concat(buffered, size)
+    } else {
+      yield concat(buffered, bufferedBytes)
+    }
   }
 }
