@@ -4,6 +4,8 @@
 
 A majorly simplified version of [block-stream2](https://www.npmjs.com/package/block-stream2). Dependency free and very fast.
 
+Works with Uint8Arrays, Node Buffers, Arrays and Strings!
+
 ## Usage
 
 ``` js
