@@ -41,12 +41,5 @@ module.exports = async function * (iterator, size = 512, opts = {}) {
       buffered = [b.slice(offset, b.length)]
     }
   }
-  if (bufferedBytes) {
-    if (zeroPadding) {
-      buffered.push(new Uint8Array(size - bufferedBytes))
-      yield concat(buffered, size)
-    } else {
-      yield concat(buffered, bufferedBytes)
-    }
-  }
+  if (bufferedBytes) yield concat(buffered, zeroPadding ? size : bufferedBytes)
 }

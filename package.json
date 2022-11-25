@@ -1,6 +1,6 @@
 {
   "name": "block-iterator",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Transform input into equally-sized blocks of output",
   "main": "index.js",
   "scripts": {
