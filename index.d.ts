@@ -1,12 +1,12 @@
-type Stream = Iterable<any> | AsyncIterable<any>
+type Stream<T> = Iterable<T> | AsyncIterable<T>
 
-declare function chunk(stream: Stream, size?: number, option?: {
+declare function chunk<T extends Uint8Array | string>(stream: Stream<T>, size?: number, option?: {
     zeroPadding?: boolean,
-}): AsyncIterable<Uint8Array | string>;
+}): AsyncIterable<T>;
 
-declare function chunk(stream: Stream, option?: {
+declare function chunk<T extends Uint8Array | string>(stream: Stream<T>, option?: {
     size?: number,
     zeroPadding?: boolean,
-}): AsyncIterable<Uint8Array | string>;
+}): AsyncIterable<T>;
 
 export = chunk;
