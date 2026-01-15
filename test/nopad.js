@@ -1,4 +1,3 @@
-
 const blockIterator = require('../')
 const test = require('tape')
 
